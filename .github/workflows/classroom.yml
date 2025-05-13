@@ -1,0 +1,97 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Criar duas pastas chamadas pastas joao e maria
+      id: criar-duas-pastas-chamadas-pastas-joao-e-maria
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Criar duas pastas chamadas pastas joao e maria
+        setup-command: "./questao01.sh"
+        command: "./.tests/criacao_pastas.sh"
+        timeout: 10
+        max-score: 1
+    - name: Entre na pasta "joao". Copie a pasta /etc/systemd para esta pasta.
+      id: entre-na-pasta-joao-copie-a-pasta-etc-systemd-para-esta-pasta
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Entre na pasta "joao". Copie a pasta /etc/systemd para esta pasta.
+        setup-command: "./questao02.sh"
+        command: "./.tests/copiar_systemd_para_joao.sh"
+        timeout: 10
+        max-score: 1
+    - name: Entre na pasta "maria". Copie os arquivos /etc/passwd e /etc/group para
+        esta pasta.
+      id: entre-na-pasta-maria-copie-os-arquivos-etc-passwd-e-etc-group-para-esta-pasta
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Entre na pasta "maria". Copie os arquivos /etc/passwd e /etc/group
+          para esta pasta.
+        setup-command: "./questao03.sh"
+        command: "./.tests/copiar_passwd_group_para_maria.sh"
+        timeout: 10
+        max-score: 1
+    - name: Crie uma cópia das pastas "joao" e "maria". As cópias deverão estar na
+        pasta home do usuário logado.
+      id: crie-uma-copia-das-pastas-joao-e-maria-as-copias-deverao-estar-na-pasta-home-do-usuario-logado
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Crie uma cópia das pastas "joao" e "maria". As cópias deverão estar
+          na pasta home do usuário logado.
+        setup-command: "./questao04.sh"
+        command: "./.tests/criar_copias_joao_maria.sh"
+        timeout: 10
+        max-score: 1
+    - name: Cria uma pasta chamada "mais_uma_pasta" e copie as pastas joao e maria
+        para dentro delas
+      id: cria-uma-pasta-chamada-mais_uma_pasta-e-copie-as-pastas-joao-e-maria-para-dentro-delas
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Cria uma pasta chamada "mais_uma_pasta" e copie as pastas joao
+          e maria para dentro delas
+        setup-command: "./questao05.sh"
+        command: "./.tests/criar_mais_uma_pasta.sh"
+        timeout: 10
+        max-score: 1
+    - name: Renomeie as pastas mais_uma_pasta/maria para mais_uma_pasta/joao e vice-versa
+      id: renomeie-as-pastas-mais_uma_pasta-maria-para-mais_uma_pasta-joao-e-vice-versa
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Renomeie as pastas mais_uma_pasta/maria para mais_uma_pasta/joao
+          e vice-versa
+        setup-command: "./questao06.sh"
+        command: "./.tests/renomear_em_mais_uma_pasta.sh"
+        timeout: 10
+        max-score: 1
+    - name: Apague a pasta /srv
+      id: apague-a-pasta-srv
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Apague a pasta /srv
+        setup-command: "./remover_srv.sh"
+        command: "./.tests/questao07.sh"
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        CRIAR-DUAS-PASTAS-CHAMADAS-PASTAS-JOAO-E-MARIA_RESULTS: "${{steps.criar-duas-pastas-chamadas-pastas-joao-e-maria.outputs.result}}"
+        ENTRE-NA-PASTA-JOAO-COPIE-A-PASTA-ETC-SYSTEMD-PARA-ESTA-PASTA_RESULTS: "${{steps.entre-na-pasta-joao-copie-a-pasta-etc-systemd-para-esta-pasta.outputs.result}}"
+        ENTRE-NA-PASTA-MARIA-COPIE-OS-ARQUIVOS-ETC-PASSWD-E-ETC-GROUP-PARA-ESTA-PASTA_RESULTS: "${{steps.entre-na-pasta-maria-copie-os-arquivos-etc-passwd-e-etc-group-para-esta-pasta.outputs.result}}"
+        CRIE-UMA-COPIA-DAS-PASTAS-JOAO-E-MARIA-AS-COPIAS-DEVERAO-ESTAR-NA-PASTA-HOME-DO-USUARIO-LOGADO_RESULTS: "${{steps.crie-uma-copia-das-pastas-joao-e-maria-as-copias-deverao-estar-na-pasta-home-do-usuario-logado.outputs.result}}"
+        CRIA-UMA-PASTA-CHAMADA-MAIS_UMA_PASTA-E-COPIE-AS-PASTAS-JOAO-E-MARIA-PARA-DENTRO-DELAS_RESULTS: "${{steps.cria-uma-pasta-chamada-mais_uma_pasta-e-copie-as-pastas-joao-e-maria-para-dentro-delas.outputs.result}}"
+        RENOMEIE-AS-PASTAS-MAIS_UMA_PASTA-MARIA-PARA-MAIS_UMA_PASTA-JOAO-E-VICE-VERSA_RESULTS: "${{steps.renomeie-as-pastas-mais_uma_pasta-maria-para-mais_uma_pasta-joao-e-vice-versa.outputs.result}}"
+        APAGUE-A-PASTA-SRV_RESULTS: "${{steps.apague-a-pasta-srv.outputs.result}}"
+      with:
+        runners: criar-duas-pastas-chamadas-pastas-joao-e-maria,entre-na-pasta-joao-copie-a-pasta-etc-systemd-para-esta-pasta,entre-na-pasta-maria-copie-os-arquivos-etc-passwd-e-etc-group-para-esta-pasta,crie-uma-copia-das-pastas-joao-e-maria-as-copias-deverao-estar-na-pasta-home-do-usuario-logado,cria-uma-pasta-chamada-mais_uma_pasta-e-copie-as-pastas-joao-e-maria-para-dentro-delas,renomeie-as-pastas-mais_uma_pasta-maria-para-mais_uma_pasta-joao-e-vice-versa,apague-a-pasta-srv
